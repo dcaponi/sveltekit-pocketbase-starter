@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  pocketbase:
+    container_name: pocketbase
+    build: .
+    # image: 471916540569.dkr.ecr.us-west-2.amazonaws.com/pocketbase
+    volumes:
+      - ./pocketbase-volume:/pb/pb_data
+    ports:
+      - "5555:5555"
+    restart: unless-stopped
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5555/api/health || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pocketbase-volume:
+    name: pocketbase-volume
