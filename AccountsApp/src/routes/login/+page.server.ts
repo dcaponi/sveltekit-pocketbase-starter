@@ -19,6 +19,7 @@ export const load: PageServerLoad<OutputType> = async ({ locals, url, cookies })
     const redirectURL = `${url.origin}/callback`;
     const googleAuthProvider = authMethods.authProviders[0];
     const authProviderRedirect = `${googleAuthProvider.authUrl}${redirectURL}`;
+
     const state = googleAuthProvider.state;
 
     return {
