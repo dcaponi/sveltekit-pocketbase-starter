@@ -3,15 +3,26 @@
     import type { PageData } from './$types';
 
     export let data: PageData;
-    function gotoAuthProvider() {
-        if (browser) {
-            document.cookie = `state=${data?.authProviderState}`;
-            document.cookie = `cv=${data?.authCodeVerifier}`;
-        }
+    
+    type OutputType = { [key: string]: {
+        authProviderRedirect: string;
+        authProviderState: string;
+        authCodeVerifier: string;
+    }};
 
-        window.location.href = data.authProviderRedirect || '';
+    let providers = data;
+    function gotoAuthProvider(name: string) {
+        if (browser) {
+            if( providers[name] ){
+                document.cookie = `state=${providers[name].authProviderState}`;
+                document.cookie = `cv=${providers[name].authCodeVerifier}`;
+                document.cookie = `prov=${name}`
+            }
+        }
+        window.location.href = providers[name].authProviderRedirect || '';
     }
 
 </script>
 
-<button on:click={gotoAuthProvider}>Login with Google</button>
+<button on:click={() => gotoAuthProvider("google")}>Login with Google</button>
+<button on:click={() => gotoAuthProvider("github")}>Login with Github</button>

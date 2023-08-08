@@ -1,6 +1,11 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-export type OutputType = { authProviderRedirect: string; authProviderState: string };
+
+export type OutputType = { [key: string]: {
+    authProviderRedirect: string;
+    authProviderState: string;
+    authCodeVerifier: string;
+}};
 
 export const load: PageServerLoad<OutputType> = async ({ locals, url, cookies }) => {
     const authToken = cookies.get('pb_auth');
@@ -10,21 +15,19 @@ export const load: PageServerLoad<OutputType> = async ({ locals, url, cookies })
     
     const authMethods = await locals.pb?.collection('users').listAuthMethods();
     if (!authMethods) {
-        return {
-            authProviderRedirect: '',
-            authProviderState: ''
-        };
+        return {};
     }
 
     const redirectURL = `${url.origin}/callback`;
-    const googleAuthProvider = authMethods.authProviders[0];
-    const authProviderRedirect = `${googleAuthProvider.authUrl}${redirectURL}`;
 
-    const state = googleAuthProvider.state;
+    let output: OutputType = {}
+    authMethods.authProviders.forEach(provider => {
+        output[provider.name] = {
+            authProviderRedirect: `${provider.authUrl}${redirectURL}`,
+            authProviderState: provider.state,
+            authCodeVerifier: provider.codeVerifier,
+        };
+    });
 
-    return {
-        authProviderRedirect: authProviderRedirect,
-        authProviderState: state,
-        authCodeVerifier: googleAuthProvider.codeVerifier,
-    };
+    return output
 };
