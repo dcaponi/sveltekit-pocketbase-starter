@@ -5,7 +5,7 @@ import { VITE_POCKETBASE_URL } from '$env/static/private';
 export const handle: Handle = async ({ event, resolve }) => {
     event.locals.pb = new PocketBase(VITE_POCKETBASE_URL);
     event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
-
+    console.log(event.locals.pb.authStore.isValid)
     try {
         if (event.locals.pb.authStore.isValid) {
             await event.locals.pb.collection('users').authRefresh();
@@ -18,7 +18,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     const isProd = process.env.NODE_ENV === 'production' ? true : false;
     response.headers.set(
         'set-cookie',
-        event.locals.pb.authStore.exportToCookie({ secure: isProd, sameSite: 'strict', httpOnly: true })
+        event.locals.pb.authStore.exportToCookie({ secure: isProd, sameSite: 'none', httpOnly: true })
     );
     return response;
 };
