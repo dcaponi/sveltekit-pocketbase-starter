@@ -3,7 +3,7 @@
 An insanely simple free plug & play setup for those wanting auth/user management in a SvelteKit app with as little pain as possible.
 
 ## Getting Started - Local Development
-1. Clone this repo
+1. Clone this repo and 
 2. Set `VITE_POCKETBASE_URL=http://127.0.0.1:5555` in `AccountsApp/.env.local`
 3. Run `make frontend-up` to bring up the skeleton app and navigate to `/login`
 4. Run `make backend-up` to bring up PocketBase
@@ -13,6 +13,16 @@ An insanely simple free plug & play setup for those wanting auth/user management
 8. Create routes in `/routes` following standard SvelteKit developer guidance
    1. If you want them to be *protected* i.e. user is logged in to see the page, add the folder to `const protectedRoutes = ['/protected']` in `AccountsApp/src/routes/+layout.server.ts`
    2. You can also configure the page an un-authed user gets bounced to (in this example its `/login`)
+
+## Adding to Existing Project
+Assumes you have a SvelteKit project as created with `npm create svelte@latest <project name>`
+1. `npm i pocketbase`
+2. Add the PocketBase type from this project's `app.d.ts` to yours if you use TypeScript
+3. Add `Handle` logic from `/hooks.server.ts` to your own `/hooks.server.ts` (create this file if necessary)
+4. Add the logic from `/routes/+layout.server.ts` `load` function to your `/routes/+layout.server.ts` (create this file if necessary)
+5. Copy the `/routes/callback` `/routes/confirm-verification` and `/routes/login` folders. to your `routes`. If you have a `/routes/login` page, you may need to merge logic. Add styles as required
+6. Modify the `protectedRoutes` array in `/routes/+layout.server.ts` to mark any routes you need auth blocked.
+7. Follow all the PocketBase setup instructions from `Getting Started - Local Development` at least one `Optional - <auth flow>`
 
 ## Optional - Email/Password Flow with Confirmation Email
    1. Go to "Mail Settings" and set the "Verification Template" Action URL to `{APP_URL}/confirm-verification/{TOKEN}`
