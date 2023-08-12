@@ -4,8 +4,8 @@ import type { RequestEvent, RequestHandler } from './$types';
 export const GET: RequestHandler = async ({ locals, url, cookies }: RequestEvent) => {
     const redirectURL = `${url.origin}/callback`;
     const expectedState = cookies.get('state');
-    const codeVerifier = cookies.get('cv')
-    const providerName = cookies.get('prov')
+    const codeVerifier = cookies.get('cv');
+    const providerName = cookies.get('prov');
 
     const query = new URLSearchParams(url.search);
     const state = query.get('state');

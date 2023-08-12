@@ -1,5 +1,6 @@
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect, type Cookies } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+
 
 export type OutputType = { [key: string]: {
     authProviderRedirect: string;
@@ -31,3 +32,57 @@ export const load: PageServerLoad<OutputType> = async ({ locals, url, cookies })
 
     return output
 };
+
+export const actions = {
+    signup: async ({ locals, request, cookies }) => {
+        const data = await request.formData();
+        const email = data.get('email')?.toString() || '';
+        const password = data.get('password')?.toString() || '';
+        const passwordConfirm = data.get('passwordConfirm')?.toString() || '';
+
+        await locals.pb?.collection('users').create({email, password, passwordConfirm})
+        locals.pb?.collection('users').requestVerification(email)
+
+        return loginWithEmailPassword(locals, cookies, email, password)
+    },
+    login: async ({ locals, request, cookies }) => {
+        const data = await request.formData();
+        const email = data.get('email')?.toString() || '';
+        const password = data.get('password')?.toString() || '';
+
+        return loginWithEmailPassword(locals, cookies, email, password)
+    }
+}
+
+const loginWithEmailPassword = async (locals: App.Locals, cookies: Cookies, email: string, password: string) => {
+    try {
+            await locals.pb?.collection('users').authWithPassword(email, password);
+            const isProd = process.env.NODE_ENV === 'production' ? true : false;
+            if(locals.pb?.authStore.isValid){
+                cookies.set(
+                    'pb_auth',
+                    locals.pb?.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true })
+                );
+                return { success: true }
+            }
+        } catch (e: any) {
+            if(e.status >= 400 && e.status <= 500){
+                return fail(e.status, { email, authFail: true });
+            }
+            if (e.status >=500){
+                return fail(e.status, { email, authDown: true });
+            }
+        }
+}
+
+const makeid = (length: number) => {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
