@@ -56,33 +56,21 @@ export const actions = {
 
 const loginWithEmailPassword = async (locals: App.Locals, cookies: Cookies, email: string, password: string) => {
     try {
-            await locals.pb?.collection('users').authWithPassword(email, password);
-            const isProd = process.env.NODE_ENV === 'production' ? true : false;
-            if(locals.pb?.authStore.isValid){
-                cookies.set(
-                    'pb_auth',
-                    locals.pb?.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true })
-                );
-                return { success: true }
-            }
-        } catch (e: any) {
-            if(e.status >= 400 && e.status <= 500){
-                return fail(e.status, { email, authFail: true });
-            }
-            if (e.status >=500){
-                return fail(e.status, { email, authDown: true });
-            }
+        await locals.pb?.collection('users').authWithPassword(email, password);
+        const isProd = process.env.NODE_ENV === 'production' ? true : false;
+        if(locals.pb?.authStore.isValid){
+            cookies.set(
+                'pb_auth',
+                locals.pb?.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true })
+            );
+            return { success: true }
         }
-}
-
-const makeid = (length: number) => {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
+    } catch (e: any) {
+        if(e.status >= 400 && e.status <= 500){
+            return fail(e.status, { email, authFail: true });
+        }
+        if (e.status >=500){
+            return fail(e.status, { email, authDown: true });
+        }
     }
-    return result;
 }
