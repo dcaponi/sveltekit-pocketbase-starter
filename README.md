@@ -3,10 +3,10 @@
 An insanely simple free plug & play setup for those wanting auth/user management in a SvelteKit app with as little pain as possible.
 
 ## Getting Started - Local Development
-1. Clone this repo and 
-2. Set `VITE_POCKETBASE_URL=http://127.0.0.1:5555` in `AccountsApp/.env.local`
-3. Run `make frontend-up` to bring up the skeleton app and navigate to `/login`
-4. Run `make backend-up` to bring up PocketBase
+1. Set `VITE_POCKETBASE_URL=http://127.0.0.1:5555` in `AccountsApp/.env.local`
+2. From the `pocketbase` directory, Run `make frontend-up` to bring up the skeleton app and navigate to `/login`
+3. From the `pocketbase` directory, Run `make backend-up` to bring up PocketBase
+4. This project also comes with a docker compose file for `pocketbase`. Start the frontend from this folder with `npm run dev` and from the `pocketbase` directory, run `docker compose up` to bring up pocketbase.
 5. Go to the PocketBase UI at `localhost:5555/_/` click "Settings" (tool icon on the far left side)
 6. Set "Application name" to whatever you like. "Set Application URL" to `localhost:5173` (we need this for redirect URLs to the SvelteKit pieces later)
 7. Follow one or both of the flow setup guides below

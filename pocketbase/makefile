@@ -1,7 +1,7 @@
 BINARY_NAME=pocketbase
 MAIN_FILE=main.go
 BUILD_DIR=build
-FRONTEND_DIR=./AccountsApp
+FRONTEND_DIR=../
 OS=darwin
 
 .PHONY: build
