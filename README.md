@@ -4,13 +4,16 @@ An insanely simple free plug & play setup for those wanting auth/user management
 
 ## Getting Started - Local Development
 1. Set `VITE_POCKETBASE_URL=http://127.0.0.1:5555` in `AccountsApp/.env.local`
-2. From the `pocketbase` directory, Run `make frontend-up` to bring up the skeleton app and navigate to `/login`
-3. From the `pocketbase` directory, Run `make backend-up` to bring up PocketBase
-4. This project also comes with a docker compose file for `pocketbase`. Start the frontend from this folder with `npm run dev` and from the `pocketbase` directory, run `docker compose up` to bring up pocketbase.
-5. Go to the PocketBase UI at `localhost:5555/_/` click "Settings" (tool icon on the far left side)
-6. Set "Application name" to whatever you like. "Set Application URL" to `localhost:5173` (we need this for redirect URLs to the SvelteKit pieces later)
-7. Follow one or both of the flow setup guides below
-8. Create routes in `/routes` following standard SvelteKit developer guidance
+2. Startup Option - Makefile
+   1. From the `pocketbase` directory, Run `make frontend-up` to bring up the skeleton app and navigate to `/login`
+   2. From the `pocketbase` directory, Run `make backend-up` to bring up PocketBase
+3. Startup Option - Docker + `npm run dev`
+   1.  Start the frontend from this folder with `npm run dev`
+   2.  From the `pocketbase` directory, run `docker compose up -d` to bring up pocketbase in a container.
+4. Go to the PocketBase UI at `localhost:5555/_/` Set up an account if you haven't or log in, then click "Settings" (tool icon on the far left side)
+5. Set "Application name" to whatever you like. "Set Application URL" to `localhost:5173` (we need this for redirect URLs to the SvelteKit pieces later)
+6. Follow one or both of the flow setup guides below
+7. Create routes in `/routes` following standard SvelteKit developer guidance
    1. If you want them to be *protected* i.e. user is logged in to see the page, add the folder to `const protectedRoutes = ['/protected']` in `AccountsApp/src/routes/+layout.server.ts`
    2. You can also configure the page an un-authed user gets bounced to (in this example its `/login`)
 
