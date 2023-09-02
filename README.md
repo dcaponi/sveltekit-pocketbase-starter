@@ -3,7 +3,7 @@
 An insanely simple free plug & play setup for those wanting auth/user management in a SvelteKit app with as little pain as possible.
 
 ## Getting Started - Local Development
-1. Set `VITE_POCKETBASE_URL=http://127.0.0.1:5555` in `AccountsApp/.env.local`
+1. Set `VITE_POCKETBASE_URL=http://127.0.0.1:5555` in `sveltekit-pocketbase-starter/.env.local`
 2. Startup Option - Makefile
    1. From the `pocketbase` directory, Run `make frontend-up` to bring up the skeleton app and navigate to `/login`
    2. From the `pocketbase` directory, Run `make backend-up` to bring up PocketBase
@@ -14,7 +14,7 @@ An insanely simple free plug & play setup for those wanting auth/user management
 5. Set "Application name" to whatever you like. "Set Application URL" to `localhost:5173` (we need this for redirect URLs to the SvelteKit pieces later)
 6. Follow one or both of the flow setup guides below
 7. Create routes in `/routes` following standard SvelteKit developer guidance
-   1. If you want them to be *protected* i.e. user is logged in to see the page, add the folder to `const protectedRoutes = ['/protected']` in `AccountsApp/src/routes/+layout.server.ts`
+   1. If you want them to be *protected* i.e. user is logged in to see the page, add the folder to `const protectedRoutes = ['/protected']` in `sveltekit-pocketbase-starter/src/routes/+layout.server.ts`
    2. You can also configure the page an un-authed user gets bounced to (in this example its `/login`)
 
 ## Adding to Existing Project
@@ -29,7 +29,7 @@ Assumes you have a SvelteKit project as created with `npm create svelte@latest <
 
 ## ✉️ Email/Password Flow with Confirmation Email
    1. Go to "Mail Settings" and set the "Verification Template" Action URL to `{APP_URL}/confirm-verification/{TOKEN}`
-      1. There's a `confirm-verification` folder in the AccountsApp SvelteKit project that handles flipping the "verified" flag when a user visits the Action URL from their email.
+      1. There's a `confirm-verification` folder in the sveltekit-pocketbase-starter SvelteKit project that handles flipping the "verified" flag when a user visits the Action URL from their email.
       2. Check "Use SMTP mail server"
       3. If you're cheap like me and don't want to pay for a SendGrid or Mail Gun you can:
          1. Set up a Gmail Account
@@ -46,7 +46,7 @@ Assumes you have a SvelteKit project as created with `npm create svelte@latest <
 ## 🛜 OAuth Flow
    1. Go to your desired OAuth provider's website and follow their instructions for integrating OAuth2
       1. Set the Redirect URI to `http://localhost:5173/callback` 
-         1. there's a `callback` folder in AccountsApp SvelteKit project that handles the auth code response and requests an access token. This is why we set the "Application URL" earlier
+         1. there's a `callback` folder in sveltekit-pocketbase-starter SvelteKit project that handles the auth code response and requests an access token. This is why we set the "Application URL" earlier
       2. This should result in a Client ID and Client Secret
    2. In PocketBase go to the Auth Providers setting in the left menu
    3. Select the sprocket icon for the auth providers you have set up and plug in the Client ID and Secret (and other information you may need. Microsoft is a more complex example)
