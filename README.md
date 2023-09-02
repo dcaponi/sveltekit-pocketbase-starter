@@ -22,9 +22,9 @@ Assumes you have a SvelteKit project as created with `npm create svelte@latest <
 4. Add the logic from `/routes/+layout.server.ts` `load` function to your `/routes/+layout.server.ts` (create this file if necessary)
 5. Copy the `/routes/callback` `/routes/confirm-verification` and `/routes/login` folders. to your `routes`. If you have a `/routes/login` page, you may need to merge logic. Add styles as required
 6. Modify the `protectedRoutes` array in `/routes/+layout.server.ts` to mark any routes you need auth blocked.
-7. Follow all the PocketBase setup instructions from `Getting Started - Local Development` at least one `Optional - <auth flow>`
+7. Follow all the PocketBase setup instructions from `Getting Started - Local Development` at least one `Auth flow` 👇
 
-## Optional - Email/Password Flow with Confirmation Email
+## ✉️ Email/Password Flow with Confirmation Email
    1. Go to "Mail Settings" and set the "Verification Template" Action URL to `{APP_URL}/confirm-verification/{TOKEN}`
       1. There's a `confirm-verification` folder in the AccountsApp SvelteKit project that handles flipping the "verified" flag when a user visits the Action URL from their email.
       2. Check "Use SMTP mail server"
@@ -40,7 +40,7 @@ Assumes you have a SvelteKit project as created with `npm create svelte@latest <
       7. Provide your username and password from your SMTP provider
          1. If you did the cheap option thats the email for your new gmail account and the app password.
 
-## Optional - OAuth Flow
+## 🛜 OAuth Flow
    1. Go to your desired OAuth provider's website and follow their instructions for integrating OAuth2
       1. Set the Redirect URI to `http://localhost:5173/callback` 
          1. there's a `callback` folder in AccountsApp SvelteKit project that handles the auth code response and requests an access token. This is why we set the "Application URL" earlier
@@ -66,4 +66,4 @@ Assumes you have a SvelteKit project as created with `npm create svelte@latest <
 1. This uses cookie based JWTs and therefore cookies are only shared if you're using https, and only over http (not accessable via javascript). Therefore ensure your frontend and backend share domains.
 2. You can set the cookie samesite setting to something other than lax if you don't want to use OAuth. Lax is required for OAuth since your app will be using cookies while talking to 3rd party services.
 3. Pocketbase uses a different signing secret per session, so on the backend when validating the JWT on the cookie, a HTTP call to PocketBase via the SDK or their API is required.
-4. The design philosophy behind this was to get decent auth working in a quickly repeatable fashion using the cheapest setup possible. This is in no way suggested for enterprise grade auth flows, but if you have less than 10k daily active users it _should_ be fine. Lets be real, if you have 10k daily active users, go get funding and make scale and enterprise shit someone else's problem 😉
+4. The design philosophy behind this is to have decent auth working in a fast, repeatable fashion using the cheapest setup possible. This is in no way suggested for enterprise grade auth flows, but if you have less than 10k daily active users it _should_ be fine. If you have 10k daily active users, go get funding and make scale and enterprise shit someone else's problem 😉

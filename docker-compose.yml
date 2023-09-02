@@ -19,3 +19,8 @@ services:
 volumes:
   pocketbase-volume:
     name: pocketbase-volume
+
+networks:
+  default:
+    external: true
+    name: local-dev
