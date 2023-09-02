@@ -19,7 +19,12 @@ export const handle: Handle = async ({ event, resolve }) => {
     const isProd = process.env.NODE_ENV === 'production' ? true : false;
     response.headers.set(
         'set-cookie',
-        event.locals.pb.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true })
+        event.locals.pb.authStore.exportToCookie({ 
+            httpOnly: true,
+            secure: isProd, 
+            sameSite: isProd ? 'none' : 'lax',  
+            domain: isProd ? ".indexter.tech" : "localhost" 
+        })
     );
     return response;
 };
