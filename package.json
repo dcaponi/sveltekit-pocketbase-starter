@@ -22,6 +22,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"pocketbase": "^0.15.2"
+		"pocketbase": "^0.15.2",
+		"vitest": "^0.34.3"
 	}
 }
