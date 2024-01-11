@@ -1,4 +1,4 @@
-import { fail, redirect, type Cookies } from '@sveltejs/kit';
+import { fail, redirect, type Cookies, type HttpError } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 
@@ -50,7 +50,7 @@ export const actions = {
         try {
             await locals.pb?.collection('users').create({email, password, passwordConfirm})
             locals.pb?.collection('users').requestVerification(email)
-        } catch (e) {
+        } catch (e: any) {
             return fail(422, {error: true, message: e.response.data.email.message})
         }
 
