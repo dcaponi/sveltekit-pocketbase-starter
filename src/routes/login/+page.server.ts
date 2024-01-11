@@ -35,8 +35,6 @@ export const load: PageServerLoad<OutputType> = async ({ locals, url, cookies })
         console.error("[ERROR] Unable to connect to authentication service")
         return {}
     }
-
-    
 };
 
 export const actions = {
@@ -46,8 +44,15 @@ export const actions = {
         const password = data.get('password')?.toString() || '';
         const passwordConfirm = data.get('passwordConfirm')?.toString() || '';
 
-        await locals.pb?.collection('users').create({email, password, passwordConfirm})
-        locals.pb?.collection('users').requestVerification(email)
+        if (password !== passwordConfirm) {
+            return fail(422, { email, error: true, message: "password and password confirm must match" });
+        }
+        try {
+            await locals.pb?.collection('users').create({email, password, passwordConfirm})
+            locals.pb?.collection('users').requestVerification(email)
+        } catch (e) {
+            return fail(422, {error: true, message: e.response.data.email.message})
+        }
 
         return loginWithEmailPassword(locals, cookies, email, password)
     },
@@ -73,10 +78,10 @@ const loginWithEmailPassword = async (locals: App.Locals, cookies: Cookies, emai
         }
     } catch (e: any) {
         if(e.status >= 400 && e.status <= 500){
-            return fail(e.status, { email, authFail: true });
+            return fail(e.status, { email, error: true, message: "failed to authenticate" });
         }
         if (e.status >=500){
-            return fail(e.status, { email, authDown: true });
+            return fail(e.status, { email, error: true, message: "authentication server could not be reached" });
         }
     }
 }
