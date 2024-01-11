@@ -16,7 +16,7 @@ An insanely simple free plug & play setup for those wanting auth/user management
 7. Create routes in `/routes` following standard SvelteKit developer guidance
    1. If you want them to be *protected* i.e. user is logged in to see the page, add the folder to `const protectedRoutes = ['/protected']` in `sveltekit-pocketbase-starter/src/routes/+layout.server.ts`
    2. You can also configure the page an un-authed user gets bounced to (in this example its `/login`)
-8. If you intend to do e-commerce stuff see the e-commerce section below. You'll need to set up stripe test stuff. If not, ignore and if you really hate it, nuke the `/routes/buy` folder and all the stuff about nonce in `routes/+layout.server.ts`
+8. If you intend to do e-commerce stuff see the e-commerce section below. You'll need to set up stripe test stuff. If not, ignore and if you really hate it, nuke the `/routes/buy` folder and all the stuff about nonce in `routes/+layout.server.ts`. 
 
 ## Adding to Existing Project
 Assumes you have a SvelteKit project as created with `npm create svelte@latest <project name>`
