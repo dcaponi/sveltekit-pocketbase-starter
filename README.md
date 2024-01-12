@@ -78,12 +78,7 @@ Assumes you have a SvelteKit project as created with `npm create svelte@latest <
     * Now you need to fill out all the paperwork with your EIN from the IRS and add all your support emails and terms and stuff. Do that if you got it. Primarily you need an EIN or your social but that only works if you're doing business as a sole proprietor
     * Finally create some products and put their IDs in the `.env.local` (see `.env-example` for a hint)
 2. next create a long-ish string of random garbage to be your JWT signing secret (see `.env-example`)
-    * We need this to sign nonces
-    * The nonce is a random string of characters we'll include with the product details in a signed JWT. We'll stick one in the success callback url we give to stripe, so when they call us back after successful payment we'll know 
-      * A) the payment went through 
-      * B) who paid 
-      * C) that nobody intercepted the payment 
-      * D) nobody tries to modify the package after paying (kinda like the nice people checking reciepts at the costco exit making sure you didn't pull a switcheroo with the boxes)
+    * The nonce is a random string of characters we'll include with the product details in a JWT. We'll stick one in the success callback url we give to stripe, so when they call us back after successful payment we'll know that the payment went through. The nonce is associated to a user with other purchase intent data that will be applied to the users account provided the nonce comes back from stripe and matches what we have on file.
     * We associate the nonce to the user as well by saving that in a field in pocketbase
       * speaking of which, make sure you add a `nonce` column to the users table in pocketbase
 3. modify `/routes/buy` to the endpoint what your offerings page is called
