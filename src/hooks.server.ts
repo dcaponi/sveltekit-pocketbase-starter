@@ -1,6 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
 import PocketBase from 'pocketbase';
-import type { RequestEvent, RequestHandler } from './$types';
 import { VITE_POCKETBASE_URL } from '$env/static/private';
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -24,7 +23,7 @@ export const handle: Handle = async ({ event, resolve }) => {
             httpOnly: true,
             secure: isProd, 
             sameSite: isProd ? 'none' : 'lax',  
-            domain: isProd ? ".indexter.tech" : "localhost" 
+            domain: isProd ? ".yoursite.tld" : "localhost" 
         })
     );
     return response;

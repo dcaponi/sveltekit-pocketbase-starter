@@ -1,4 +1,4 @@
-import { fail, redirect, type Cookies, type HttpError } from '@sveltejs/kit';
+import { fail, redirect, type Cookies } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 
