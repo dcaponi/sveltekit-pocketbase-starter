@@ -11,3 +11,4 @@ vite.config.ts.timestamp-*
 pocketbase/build
 pocketbase/pb_data
 pocketbase/pocketbase-volume
+.vercel
