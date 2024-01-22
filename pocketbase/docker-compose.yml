@@ -9,6 +9,8 @@ services:
       - ./pocketbase-volume:/pb/pb_data
     ports:
       - "5555:5555"
+    environment:
+      - PORT=5555
     restart: unless-stopped
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:5555/api/health || exit 1
