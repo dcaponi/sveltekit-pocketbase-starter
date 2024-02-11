@@ -13,7 +13,9 @@ import {
 } from "$env/static/private";
 
 export type Choice = {
+    type: "payment" | "subscription";
     sku: string;
+    description: string;
     price: number;
     label: string;
     stripeID: string;
@@ -24,9 +26,11 @@ const stripe = new Stripe(import.meta.env['VITE_STRIPE_SECRET_KEY'], {
 });
 
 const offerings: Array<Choice> = [
-    {sku: "good", price: 5, label: "good",  stripeID: VITE_STRIPE_ID_GOOD_PRODUCT},
-    {sku: "better", price: 20, label: "better", stripeID: VITE_STRIPE_ID_BETTER_PRODUCT},
-    {sku: "best", price: 30, label: "best", stripeID: VITE_STRIPE_ID_BEST_PRODUCT}
+    {type: "payment", sku: "good", price: 5, description: "a good product", label: "good",  stripeID: VITE_STRIPE_ID_GOOD_PRODUCT},
+    {type: "payment", sku: "better", price: 20, description: "a better product", label: "better", stripeID: VITE_STRIPE_ID_BETTER_PRODUCT},
+    {type: "payment", sku: "best", price: 30, description: "the best product", label: "best", stripeID: VITE_STRIPE_ID_BEST_PRODUCT},
+    {type: "subscription", sku: "subscription", description: "a subscription", price: 20, label: "Monthly Subscription", description: "As many interviews as you like. Billed monthly. Cancel anytime.", credits: 0, stripeID: VITE_STRIPE_ID_SUBSCRIPTION},
+
 ]
 
 export const load: PageServerLoad = async () =>  {
