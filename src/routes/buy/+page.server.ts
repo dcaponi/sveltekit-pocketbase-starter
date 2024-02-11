@@ -76,7 +76,7 @@ export const actions = {
                         quantity: 1,
                     },
                 ],
-                mode: 'payment',
+                mode: chosen.type,
                 // you can also have it call some backend service which will redirect the user back to the site when its done doing its thing
                 success_url: isProd ? `https://yoursite?nonce=${nonce}` : `http://localhost:5173/?nonce=${nonce}`,
                 cancel_url: isProd ? `https://yoursite` : `http://localhost:5173/`,
