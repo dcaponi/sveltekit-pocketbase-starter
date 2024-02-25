@@ -1,6 +1,6 @@
 {
 	"name": "sveltekit-pocketbase-starter",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"author": "Dominick Caponi <d.caponi1@gmail.com>",
 	"license": "MIT",
 	"scripts": {
