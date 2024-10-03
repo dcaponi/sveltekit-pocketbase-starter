@@ -4,7 +4,7 @@
 	"author": "Dominick Caponi <d.caponi1@gmail.com>",
 	"license": "MIT",
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "docker compose -f ./pocketbase/docker-compose.yml up -d && vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",

@@ -9,7 +9,8 @@ import {
     VITE_STRIPE_ID_BEST_PRODUCT, 
     VITE_STRIPE_ID_BETTER_PRODUCT, 
     VITE_STRIPE_ID_GOOD_PRODUCT, 
-    VITE_NONCE_SIGNING_SECRET 
+    VITE_NONCE_SIGNING_SECRET,
+    VITE_STRIPE_ID_SUBSCRIPTION,
 } from "$env/static/private";
 
 export type Choice = {
@@ -29,7 +30,7 @@ const offerings: Array<Choice> = [
     {type: "payment", sku: "good", price: 5, description: "a good product", label: "good",  stripeID: VITE_STRIPE_ID_GOOD_PRODUCT},
     {type: "payment", sku: "better", price: 20, description: "a better product", label: "better", stripeID: VITE_STRIPE_ID_BETTER_PRODUCT},
     {type: "payment", sku: "best", price: 30, description: "the best product", label: "best", stripeID: VITE_STRIPE_ID_BEST_PRODUCT},
-    {type: "subscription", sku: "subscription", description: "a subscription", price: 20, label: "Monthly Subscription", description: "As many interviews as you like. Billed monthly. Cancel anytime.", credits: 0, stripeID: VITE_STRIPE_ID_SUBSCRIPTION},
+    {type: "subscription", sku: "subscription", description: "a subscription", price: 20, label: "Monthly Subscription", credits: 0, stripeID: VITE_STRIPE_ID_SUBSCRIPTION},
 
 ]
 

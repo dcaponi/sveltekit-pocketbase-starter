@@ -12,11 +12,15 @@ An insanely simple free plug & play setup for those wanting auth/user management
    2.  From the `pocketbase` directory, run `docker compose up -d` to bring up pocketbase in a container.
 4. Go to the PocketBase UI at `localhost:5555/_/` Set up an account if you haven't or log in, then click "Settings" (tool icon on the far left side)
 5. Set "Application name" to whatever you like. "Set Application URL" to `localhost:5173` (we need this for redirect URLs to the SvelteKit pieces later)
-6. Follow one or both of the flow setup guides below
-7. Create routes in `/routes` following standard SvelteKit developer guidance
+6. Add a column called `purchaseIntent` to house the jwt containing info on what product was purchased when stripe calls us back.
+7. Add a column for `credits` if you intend to do a la carte type pricing (typical of generative AI type products).
+8. Add a column for `subscriptionID` for subscription based services.
+   1. This value will get automatically nulled out if a user no longer has an active subscription according to Stripe.
+9.  Follow one or both of the flow setup guides below
+10. Create routes in `/routes` following standard SvelteKit developer guidance
    1. If you want them to be *protected* i.e. user is logged in to see the page, add the folder to `const protectedRoutes = ['/protected']` in `sveltekit-pocketbase-starter/src/routes/+layout.server.ts`
    2. You can also configure the page an un-authed user gets bounced to (in this example its `/login`)
-8. If you intend to do e-commerce stuff see the e-commerce section below. You'll need to set up stripe test stuff. If not, ignore and if you really hate it, nuke the `/routes/buy` folder and all the stuff about nonce in `routes/+layout.server.ts`. 
+11. If you intend to do e-commerce stuff see the e-commerce section below. You'll need to set up stripe test stuff. If not, ignore and if you really hate it, nuke the `/routes/buy` folder and all the stuff about nonce in `routes/+layout.server.ts`. 
 
 ## Adding to Existing Project
 Assumes you have a SvelteKit project as created with `npm create svelte@latest <project name>`
