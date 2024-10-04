@@ -79,14 +79,16 @@ Assumes you have a SvelteKit project as created with `npm create svelte@latest <
 ## 💰 E-Commerce Stuff
 1. Go to stripe and set up an account (I wont even begin to tell you how complicated getting an LLC set up is... legalzoom?).
     * Anyway, stripe lets you create public and secret keys. You'll need a pair for test (usually starting with `sk_test_`) and a pair for production (usually starting with just `sk_`)
-    * Now you need to fill out all the paperwork with your EIN from the IRS and add all your support emails and terms and stuff. Do that if you got it. Primarily you need an EIN or your social but that only works if you're doing business as a sole proprietor
+    * Now you need to fill out all the paperwork with your EIN from the IRS and add all your support emails and terms and stuff. Do that if you got it. Primarily you need an EIN or your socia security number but social security number only works if you're doing business as a sole proprietor
     * Finally create some products and put their IDs in the `.env.local` (see `.env-example` for a hint)
 2. next create a long-ish string of random garbage to be your JWT signing secret (see `.env-example`)
     * The nonce is a random string of characters we'll include with the product details in a JWT. We'll stick one in the success callback url we give to stripe, so when they call us back after successful payment we'll know that the payment went through. The nonce is associated to a user with other purchase intent data that will be applied to the users account provided the nonce comes back from stripe and matches what we have on file.
     * We associate the nonce to the user as well by saving that in a field in pocketbase
       * speaking of which, make sure you add a `nonce` column to the users table in pocketbase
 3. modify `/routes/buy` to the endpoint what your offerings page is called
-4. update `offerings` in `/routes/buy/+page.server.ts` to reflect what you're selling. Give price, label and sku. I left my old stuff in there as an example.
+4. Go to Stripe and add products and for each product add a price (and whether its a one-time or subscription aka recurring)
+   1. For your products, add a description to show that
+   2. For your products, if you are selling credits, add a metadata field called `credits` and in the value add a number for how many credits the product represents.
 5. update the `urls` in `/routes/buy/+page.server.ts` to reflect your prod domains and whatnot. (actually this should be env vars but I'm lazy)
 6. Make `/routes/buy/+page.svelte` pretty. Offerings should come out from server so just decorate this page, no need for anything fancy.
 7. Fire it up and test. Stripe offers a few test payment card numbers that will let you test the flow. Check that:

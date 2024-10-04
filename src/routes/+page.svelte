@@ -91,6 +91,14 @@
 <strong>Is Logged In?</strong>
 <p>{$userStore.loggedIn}</p>
 {#if $userStore.loggedIn}
+	<strong>Bought Credits?</strong>
+	<p>
+		{#if $userStore.credits}
+			Yes: {$userStore.credits} credits
+		{:else}
+			No
+		{/if}
+	</p>
 	<strong>Has Subscription?</strong>
 	<p>
 		{#if $userStore.subscriptionID}

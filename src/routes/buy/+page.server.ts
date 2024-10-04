@@ -6,33 +6,38 @@ import { decodeJwt } from '$lib/jwt';
 import type { PageServerLoad } from "./$types";
 
 import { 
-    VITE_STRIPE_ID_BEST_PRODUCT, 
-    VITE_STRIPE_ID_BETTER_PRODUCT, 
-    VITE_STRIPE_ID_GOOD_PRODUCT, 
     VITE_NONCE_SIGNING_SECRET,
-    VITE_STRIPE_ID_SUBSCRIPTION,
 } from "$env/static/private";
 
 export type Choice = {
-    type: "payment" | "subscription";
-    sku: string;
     description: string;
     price: number;
     label: string;
     stripeID: string;
+    type: "payment" | "subscription";
+    credits: number | null;
 }
 
 const stripe = new Stripe(import.meta.env['VITE_STRIPE_SECRET_KEY'], {
   apiVersion: '2023-10-16',
 });
 
-const offerings: Array<Choice> = [
-    {type: "payment", sku: "good", price: 5, description: "a good product", label: "good",  stripeID: VITE_STRIPE_ID_GOOD_PRODUCT},
-    {type: "payment", sku: "better", price: 20, description: "a better product", label: "better", stripeID: VITE_STRIPE_ID_BETTER_PRODUCT},
-    {type: "payment", sku: "best", price: 30, description: "the best product", label: "best", stripeID: VITE_STRIPE_ID_BEST_PRODUCT},
-    {type: "subscription", sku: "subscription", description: "a subscription", price: 20, label: "Monthly Subscription", stripeID: VITE_STRIPE_ID_SUBSCRIPTION},
+const products = await stripe.products.list({active: true})
 
-]
+const offerings = (await Promise.all(products.data.map(async (product): Promise<Choice | null> => {
+    if (product.default_price) {
+        const price = (await stripe.prices.retrieve(product.default_price.toString()))
+        return {
+            label: product.name,
+            stripeID: product.default_price.toString(),
+            description: product.description ?? "unspecified",
+            price: (price.unit_amount ?? 0) / 100,
+            type: price.recurring === null ? "payment" : "subscription",
+            credits: parseInt(product.metadata.credits ?? 0)
+        }
+    }
+    return null
+}))).filter(x => x !== null)
 
 export const load: PageServerLoad = async () =>  {
     return { offerings } 
