@@ -14,14 +14,19 @@
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-static": "^1.0.0-next.50",
 		"@sveltejs/adapter-vercel": "^1.0.0-next.88",
+		
 		"@sveltejs/kit": "^1.20.4",
-		"@types/jsonwebtoken": "^9.0.7",
+		"@types/stripe-v3": "^3.1.29",
+		"audio-recorder-polyfill": "^0.4.1",
+		"smui-theme": "^7.0.0-beta.16",
 		"svelte": "^4.0.0",
 		"svelte-check": "^3.4.3",
+		"svelte-preprocess": "^5.0.4",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"vite": "^4.3.6",
-		"vitest": "^0.34.3"
+		"vitest": "^0.34.3",
+		"@types/jsonwebtoken": "^9.0.7"
 	},
 	"type": "module",
 	"dependencies": {

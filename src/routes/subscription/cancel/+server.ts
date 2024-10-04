@@ -1,9 +1,9 @@
 import { json } from '@sveltejs/kit';
-import type { RequestHandler } from '../$types';
+import type { RequestHandler } from './$types';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(import.meta.env['VITE_STRIPE_SECRET_KEY'], {
-  apiVersion: '2023-08-16',
+  apiVersion: '2023-10-16',
 });
 
 export const PUT: RequestHandler = async ({ request }) => {

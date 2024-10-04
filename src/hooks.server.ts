@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import PocketBase from 'pocketbase';
-import { VITE_POCKETBASE_URL } from '$env/static/private';
+import { VITE_POCKETBASE_URL, VITE_HOSTNAME } from '$env/static/private';
 
 export const handle: Handle = async ({ event, resolve }) => {
     event.locals.pb = new PocketBase(VITE_POCKETBASE_URL);
@@ -23,7 +23,7 @@ export const handle: Handle = async ({ event, resolve }) => {
             httpOnly: true,
             secure: isProd, 
             sameSite: isProd ? 'none' : 'lax',  
-            domain: isProd ? ".yoursite.tld" : "localhost" 
+            domain: isProd ? `.${VITE_HOSTNAME}` : "localhost" 
         })
     );
     return response;

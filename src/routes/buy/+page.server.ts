@@ -7,6 +7,7 @@ import type { PageServerLoad } from "./$types";
 
 import { 
     VITE_NONCE_SIGNING_SECRET,
+    VITE_HOSTNAME
 } from "$env/static/private";
 
 export type Choice = {
@@ -84,8 +85,8 @@ export const actions = {
                 ],
                 mode: chosen.type,
                 // you can also have it call some backend service which will redirect the user back to the site when its done doing its thing
-                success_url: isProd ? `https://yoursite?nonce=${nonce}` : `http://localhost:5173/?nonce=${nonce}`,
-                cancel_url: isProd ? `https://yoursite` : `http://localhost:5173/`,
+                success_url: isProd ? `https://${VITE_HOSTNAME}?nonce=${nonce}` : `http://localhost:5173/?nonce=${nonce}`,
+                cancel_url: isProd ? `https://${VITE_HOSTNAME}` : `http://localhost:5173/`,
                 automatic_tax: {enabled: true},
             });
             // send user to credit card page so stripe can handle that
