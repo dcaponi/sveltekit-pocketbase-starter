@@ -23,14 +23,14 @@ export type Choice = {
 }
 
 const stripe = new Stripe(import.meta.env['VITE_STRIPE_SECRET_KEY'], {
-  apiVersion: '2023-08-16',
+  apiVersion: '2023-10-16',
 });
 
 const offerings: Array<Choice> = [
     {type: "payment", sku: "good", price: 5, description: "a good product", label: "good",  stripeID: VITE_STRIPE_ID_GOOD_PRODUCT},
     {type: "payment", sku: "better", price: 20, description: "a better product", label: "better", stripeID: VITE_STRIPE_ID_BETTER_PRODUCT},
     {type: "payment", sku: "best", price: 30, description: "the best product", label: "best", stripeID: VITE_STRIPE_ID_BEST_PRODUCT},
-    {type: "subscription", sku: "subscription", description: "a subscription", price: 20, label: "Monthly Subscription", credits: 0, stripeID: VITE_STRIPE_ID_SUBSCRIPTION},
+    {type: "subscription", sku: "subscription", description: "a subscription", price: 20, label: "Monthly Subscription", stripeID: VITE_STRIPE_ID_SUBSCRIPTION},
 
 ]
 
@@ -62,12 +62,12 @@ export const actions = {
         if (chosenOffering) {
             const chosen = JSON.parse(chosenOffering.toString()) as Choice
             const nonce = generateNonce();
-            const nonceToken = jwt.sign({...chosen, nonce}, VITE_NONCE_SIGNING_SECRET);
+            const purchaseIntent = jwt.sign({...chosen, nonce}, VITE_NONCE_SIGNING_SECRET);
 
             // pin the nonce to the user. it should match when the user comes back from stripe
             // we sign it so we know nobody messed with the nonce between here and stripe
             const currentUserToken = decodeJwt(locals.pb?.authStore.token || '');
-            locals.pb?.collection('users').update(currentUserToken.id, {nonce: nonceToken});
+            locals.pb?.collection('users').update(currentUserToken.id, {purchaseIntent});
 
             const isProd = process.env.NODE_ENV === 'production' ? true : false;
             const session = await stripe.checkout.sessions.create({
