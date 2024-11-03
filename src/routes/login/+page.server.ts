@@ -73,7 +73,8 @@ const loginWithEmailPassword = async (locals: App.Locals, cookies: Cookies, emai
         if(locals.pb?.authStore.isValid){
             /* @migration task: add path argument */ cookies.set(
                             'pb_auth',
-                            locals.pb?.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true })
+                            locals.pb?.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true }),
+                            {path: "/"}
                         );
             return { success: true }
         }
