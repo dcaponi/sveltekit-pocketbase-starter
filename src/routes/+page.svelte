@@ -1,10 +1,14 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { userStore } from '$lib/stores/userStore.js';
 
-	export let data;
+	let { data } = $props();
 	const { loggedIn, credits, username, subscriptionID } = data;
-	let { subscriptionCancelAt } = data;
-	$: subscriptionCancelAt;
+	let { subscriptionCancelAt } = $state(data);
+	run(() => {
+		subscriptionCancelAt;
+	});
 
 	userStore.set({ credits, subscriptionID, subscriptionCancelAt, loggedIn: loggedIn || false });
 
@@ -77,9 +81,9 @@
 	<a href="/buy">buy stuff</a>
 	{#if $userStore.subscriptionID}
 		{#if $userStore.subscriptionCancelAt}
-			<a href="/" on:click={() => restoreSubscription()}>Reinstate Subscription</a>
+			<a href="/" onclick={() => restoreSubscription()}>Reinstate Subscription</a>
 		{:else}
-			<a href="/" on:click={() => cancelSubscription()}>Cancel Subscription</a>
+			<a href="/" onclick={() => cancelSubscription()}>Cancel Subscription</a>
 		{/if}
 	{/if}
 	<a href="/logout">logout</a>
@@ -89,7 +93,7 @@
 
 <h2>Stats</h2>
 <strong>Is Logged In?</strong>
-<p>{$userStore.loggedIn}</p>
+<p>{$userStore.loggedIn} as {username}</p>
 {#if $userStore.loggedIn}
 	<strong>Bought Credits?</strong>
 	<p>

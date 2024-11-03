@@ -10,7 +10,7 @@ const stripe = new Stripe(import.meta.env['VITE_STRIPE_SECRET_KEY'], {
 export const load: LayoutServerLoad = async ({ locals, url }) => {
     const protectedRoutes = ['protected', 'buy']
     if (!locals.pb?.authStore.isValid && protectedRoutes.includes(url.pathname.split("/").filter(Boolean)[0])) {
-        throw redirect(302, '/login')
+        redirect(302, '/login');
     }
     const userAuthSession = decodeJwt(locals.pb?.authStore.token || '');
     if (userAuthSession){

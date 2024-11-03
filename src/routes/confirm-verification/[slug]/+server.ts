@@ -8,8 +8,8 @@ export const GET: RequestHandler = async ({ locals, url }: RequestEvent) => {
     const verified = await locals.pb?.collection('users').confirmVerification(token)
     if (verified) {
         if (locals.pb?.authStore.isValid){
-            throw redirect(303, '/')
+            redirect(303, '/');
         }
     }
-    throw redirect(303, '/login')
+    redirect(303, '/login');
 }

@@ -11,7 +11,7 @@ export type OutputType = { [key: string]: {
 export const load: PageServerLoad<OutputType> = async ({ locals, url, cookies }) => {
     const authToken = cookies.get('pb_auth');
     if (authToken) {
-        throw redirect(302, '/')
+        redirect(302, '/');
     }
     
     try {
@@ -71,10 +71,10 @@ const loginWithEmailPassword = async (locals: App.Locals, cookies: Cookies, emai
         await locals.pb?.collection('users').authWithPassword(email, password);
         const isProd = process.env.NODE_ENV === 'production' ? true : false;
         if(locals.pb?.authStore.isValid){
-            cookies.set(
-                'pb_auth',
-                locals.pb?.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true })
-            );
+            /* @migration task: add path argument */ cookies.set(
+                            'pb_auth',
+                            locals.pb?.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true })
+                        );
             return { success: true }
         }
     } catch (e: any) {

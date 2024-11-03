@@ -61,7 +61,7 @@ const generateNonce = (length = 24) => {
 export const actions = {
     purchase: async ({request, locals}) => {
         if (!locals.pb?.authStore.isValid){
-            throw redirect(301, '/');
+            redirect(301, '/');
         }
         const rawData = await request.formData();
         const chosenOffering = rawData.get('chosenOffering');
@@ -90,7 +90,7 @@ export const actions = {
                 automatic_tax: {enabled: true},
             });
             // send user to credit card page so stripe can handle that
-            throw redirect(303, session.url || 'http://localhost:5173/');
+            redirect(303, session.url || 'http://localhost:5173/');
         }
     },
 }
