@@ -1,9 +1,8 @@
 <!-- @migration-task Error while migrating Svelte code: Cannot use `export let` in runes mode — use `$props()` instead -->
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import type { PageData } from './$types';
 
-	export let data: PageData;
+	let { data } = $props();
 
 	let providers = $state(data);
 
@@ -44,6 +43,6 @@
 <h2>Social Login</h2>
 {#each Object.keys(providers) as provider}
 	{#if providers[provider].authProviderState}
-		<button on:click={() => gotoAuthProvider(provider)}>Login with {provider}</button>
+		<button onclick={() => gotoAuthProvider(provider)}>Login with {provider}</button>
 	{/if}
 {/each}
