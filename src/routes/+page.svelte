@@ -1,14 +1,8 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { userStore } from '$lib/stores/userStore.js';
 
 	let { data } = $props();
-	const { loggedIn, credits, username, subscriptionID } = data;
-	let { subscriptionCancelAt } = $state(data);
-	run(() => {
-		subscriptionCancelAt;
-	});
+	let { loggedIn, credits, username, subscriptionID, subscriptionCancelAt } = data;
 
 	userStore.set({ credits, subscriptionID, subscriptionCancelAt, loggedIn: loggedIn || false });
 
@@ -38,7 +32,6 @@
 			if (restored) {
 				alert('Thank you for reinstating your subscription!');
 				userStore.set({ ...$userStore, subscriptionCancelAt: null });
-				subscriptionCancelAt = null;
 			}
 		}
 	};

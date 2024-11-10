@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export const decodeJwt = (token: string): any => {
+export const decodeJwt = (token: string): (string | jwt.JwtPayload | null) => {
     try {
         const decoded = jwt.decode(token);
         return decoded;
@@ -10,11 +10,12 @@ export const decodeJwt = (token: string): any => {
     }
 }
 
-export const validateJwt = (token: string, secret: string): any => {
+export const validateJwt = (token: string, secret: string): (string | jwt.JwtPayload | null) => {
     try {
         const valid = jwt.verify(token, secret)
         return valid
     } catch (e) {
         console.error('Invalid token: ', e)
+        return null
     }
 }

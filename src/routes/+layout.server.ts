@@ -1,9 +1,16 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { decodeJwt } from '$lib/jwt';
+import { decodeJwt, validateJwt } from '$lib/jwt';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(import.meta.env['VITE_STRIPE_SECRET_KEY'], {
+
+import { 
+    VITE_NONCE_SIGNING_SECRET,
+    VITE_STRIPE_SECRET_KEY
+} from "$env/static/private";
+import type { JwtPayload } from 'jsonwebtoken';
+
+const stripe = new Stripe(VITE_STRIPE_SECRET_KEY, {
   apiVersion: '2023-10-16',
 });
 
@@ -12,7 +19,7 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
     if (!locals.pb?.authStore.isValid && protectedRoutes.includes(url.pathname.split("/").filter(Boolean)[0])) {
         redirect(302, '/login');
     }
-    const userAuthSession = decodeJwt(locals.pb?.authStore.token || '');
+    const userAuthSession = decodeJwt(locals.pb?.authStore.token || '') as JwtPayload;
     if (userAuthSession){
         let currentUser = await locals.pb?.collection('users').getOne(userAuthSession.id);
         if (currentUser){
@@ -46,11 +53,11 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
                 }
             }
             if (currentUser.purchaseIntent) {
-                const nonce = url.searchParams.get('nonce')
-                const purchaseIntent = decodeJwt(currentUser.purchaseIntent)
                 let newUserState = {purchaseIntent: '', credits: currentUser.credits}
-                if (purchaseIntent.nonce === nonce) {
-                    newUserState = {...newUserState, credits: (currentUser.credits + purchaseIntent.credits)}
+                const nonce = url.searchParams.get('nonce')
+                const purchaseIntent = validateJwt(currentUser.purchaseIntent, VITE_NONCE_SIGNING_SECRET) as JwtPayload
+                if (purchaseIntent && purchaseIntent.nonce === nonce) {
+                    newUserState = {...newUserState, credits: (currentUser.credits + purchaseIntent.credits)}    
                 }
                 await locals.pb?.collection('users').update(userAuthSession.id, newUserState);
                 currentUser = await locals.pb?.collection('users').getOne(userAuthSession.id);

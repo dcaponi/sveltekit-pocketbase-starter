@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { type JwtPayload } from 'jsonwebtoken';
 import Stripe from 'stripe';
 import { redirect } from "@sveltejs/kit";
 import { decodeJwt } from '$lib/jwt';
@@ -69,13 +69,20 @@ export const actions = {
             const chosen = JSON.parse(chosenOffering.toString()) as Choice
             const nonce = generateNonce();
             const purchaseIntent = jwt.sign({...chosen, nonce}, VITE_NONCE_SIGNING_SECRET);
+            const isProd = process.env.NODE_ENV === 'production' ? true : false;
 
             // pin the nonce to the user. it should match when the user comes back from stripe
             // we sign it so we know nobody messed with the nonce between here and stripe
-            const currentUserToken = decodeJwt(locals.pb?.authStore.token || '');
+            const currentUserToken = decodeJwt(locals.pb?.authStore.token || '') as JwtPayload;
+
+            if (!currentUserToken) {
+                console.error("unable to determine current user")
+                redirect(303,( isProd ? `https://${VITE_HOSTNAME}` : `http://localhost:5173/`));
+            }
+
             locals.pb?.collection('users').update(currentUserToken.id, {purchaseIntent});
 
-            const isProd = process.env.NODE_ENV === 'production' ? true : false;
+            
             const session = await stripe.checkout.sessions.create({
                 line_items: [
                     {
