@@ -71,11 +71,11 @@ const loginWithEmailPassword = async (locals: App.Locals, cookies: Cookies, emai
         await locals.pb?.collection('users').authWithPassword(email, password);
         const isProd = process.env.NODE_ENV === 'production' ? true : false;
         if(locals.pb?.authStore.isValid){
-            /* @migration task: add path argument */ cookies.set(
-                            'pb_auth',
-                            locals.pb?.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true }),
-                            {path: "/"}
-                        );
+            cookies.set(
+                'pb_auth',
+                locals.pb?.authStore.exportToCookie({ secure: isProd, sameSite: 'lax', httpOnly: true }),
+                {path: "/"}
+            );
             return { success: true }
         }
     } catch (e: any) {
