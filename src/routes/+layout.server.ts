@@ -23,9 +23,7 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
     if (userAuthSession){
         let currentUser = await locals.pb?.collection('users').getOne(userAuthSession.id);
         if (currentUser){
-            let subscriptionStatus = null;
             let subscriptionCancelAt = null;
-            let subscriptionID = null;
 
             const stripeCustomerResult = await stripe.customers.list({
                 limit: 1,
@@ -38,30 +36,31 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
                     customer: stripeCustomerID
                 });
                 if (subscriptionResult.data.length > 0){
-                    subscriptionStatus = subscriptionResult.data[0].status;
-                    if (subscriptionResult.data[0].cancel_at) {
-                        subscriptionCancelAt = new Date(subscriptionResult.data[0].cancel_at * 1000)
+                    const subscription = subscriptionResult.data[0];
+                    if (subscription.cancel_at) {
+                        subscriptionCancelAt = new Date(subscription.cancel_at * 1000)
                     }
-                    subscriptionID = subscriptionResult.data[0].id;
                     await locals.pb?.collection('users').update(userAuthSession.id, {
-                        subscriptionID: subscriptionStatus === "active" ? subscriptionID : null
-                    })
+                        subscriptionID: subscription.status === "active" ? subscription.id : null
+                    });
                 } else {
                     await locals.pb?.collection('users').update(userAuthSession.id, {
                         subscriptionID: null
-                    })
+                    });
                 }
             }
+            
             if (currentUser.purchaseIntent) {
                 let newUserState = {purchaseIntent: '', credits: currentUser.credits}
                 const nonce = url.searchParams.get('nonce')
-                const purchaseIntent = validateJwt(currentUser.purchaseIntent, VITE_NONCE_SIGNING_SECRET) as JwtPayload
-                if (purchaseIntent && purchaseIntent.nonce === nonce) {
+                const purchaseIntent = validateJwt(currentUser.purchaseIntent, VITE_NONCE_SIGNING_SECRET + nonce) as JwtPayload
+                if (purchaseIntent) {
                     newUserState = {...newUserState, credits: (currentUser.credits + purchaseIntent.credits)}    
                 }
                 await locals.pb?.collection('users').update(userAuthSession.id, newUserState);
                 currentUser = await locals.pb?.collection('users').getOne(userAuthSession.id);
             }
+
             return {
                 loggedIn: locals.pb?.authStore.isValid,
                 username: currentUser?.name || "Current User",

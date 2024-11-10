@@ -68,7 +68,7 @@ export const actions = {
         if (chosenOffering) {
             const chosen = JSON.parse(chosenOffering.toString()) as Choice
             const nonce = generateNonce();
-            const purchaseIntent = jwt.sign({...chosen, nonce}, VITE_NONCE_SIGNING_SECRET);
+            const purchaseIntent = jwt.sign(chosen, VITE_NONCE_SIGNING_SECRET + nonce);
             const isProd = process.env.NODE_ENV === 'production' ? true : false;
 
             // pin the nonce to the user. it should match when the user comes back from stripe
