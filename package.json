@@ -1,11 +1,12 @@
 {
 	"name": "sveltekit-pocketbase-starter",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"author": "Dominick Caponi <d.caponi1@gmail.com>",
 	"license": "MIT",
 	"scripts": {
 		"dev": "docker compose -f ./pocketbase/docker-compose.yml up -d && vite dev",
 		"build": "vite build",
+		"publish": "./publish.sh",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
