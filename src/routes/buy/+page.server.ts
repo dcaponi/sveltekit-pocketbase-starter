@@ -45,7 +45,7 @@ export const load: PageServerLoad = async () =>  {
 }
 
 // the nonce helps the site know that the purchase was successful and coming back from stripe
-// a good nonce will be handled at the top level of the app see routes/+layout.server.ts
+// a good nonce will be handled at the top level of the app see routes/+layout.server.t
 const generateNonce = (length = 24) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
