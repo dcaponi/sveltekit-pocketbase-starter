@@ -27,4 +27,4 @@ git commit -m "chore: bump version to $version"
 git push
 
 # Publish to npm
-npm publish --access-public
+npm publish
