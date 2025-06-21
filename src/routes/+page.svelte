@@ -1,37 +1,33 @@
 <script lang="ts">
 	import { userStore } from '$lib/stores/userStore.js';
+	import type { Snippet } from 'svelte';
+	import type { LayoutServerData } from './$types';
+	import type { User } from '$lib/auth/provider';
 
-	let { data } = $props();
-	let { loggedIn, credits, username, subscriptionID, subscriptionCancelAt } = data;
+	let { data }: {data: LayoutServerData, children: Snippet} = $props();
 
-	userStore.set({ credits, subscriptionID, subscriptionCancelAt, loggedIn: loggedIn || false });
+  	let userState: User | undefined = data.userState;
+
+	userStore.set({ ...userState });
 
 	const cancelSubscription = async () => {
 		if (confirm(`Are you sure? You'll still have access until the end of your billing cycle.`)) {
-			const response = await fetch('/subscription/cancel', {
-				method: 'PUT',
-				body: JSON.stringify({ subscriptionID: subscriptionID, action: 'cancel' }),
-				headers: { 'content-type': 'application/json' }
-			});
-			({ subscriptionCancelAt } = await response.json());
-			if (subscriptionCancelAt) {
+			const response = await fetch('/subscription/cancel');
+			const { success, subscription } = await response.json();
+			if (success) {
 				alert("We're sorry to see you go, your subscription will cancel at the end of the month.");
-				userStore.set({ ...$userStore, subscriptionCancelAt });
+				userStore.set({ ...$userStore, subscriptionStatus: subscription.status });
 			}
 		}
 	};
 
 	const restoreSubscription = async () => {
 		if (confirm(`Are you sure? If so, we'll continue billing you monthly.`)) {
-			const response = await fetch('/subscription/restore', {
-				method: 'PUT',
-				body: JSON.stringify({ subscriptionID: subscriptionID, action: 'restore' }),
-				headers: { 'content-type': 'application/json' }
-			});
-			const { restored } = await response.json();
-			if (restored) {
+			const response = await fetch('/subscription/restore');
+			const { success, subscription } = await response.json();
+			if (success) {
 				alert('Thank you for reinstating your subscription!');
-				userStore.set({ ...$userStore, subscriptionCancelAt: null });
+				userStore.set({ ...$userStore, subscriptionStatus: subscription.status });
 			}
 		}
 	};
@@ -73,10 +69,10 @@
 	<a href="/protected">protected</a>
 	<a href="/buy">buy stuff</a>
 	{#if $userStore.subscriptionID}
-		{#if $userStore.subscriptionCancelAt}
-			<a href="/" onclick={() => restoreSubscription()}>Reinstate Subscription</a>
-		{:else}
+		{#if $userStore.subscriptionStatus === "active" || $userStore.subscriptionStatus === "trialing"}
 			<a href="/" onclick={() => cancelSubscription()}>Cancel Subscription</a>
+		{:else}
+			<a href="/" onclick={() => restoreSubscription()}>Reinstate Subscription</a>
 		{/if}
 	{/if}
 	<a href="/logout">logout</a>
@@ -86,7 +82,7 @@
 
 <h2>Stats</h2>
 <strong>Is Logged In?</strong>
-<p>{$userStore.loggedIn} as {username}</p>
+<p>{$userStore.loggedIn} as {$userStore.name}</p>
 {#if $userStore.loggedIn}
 	<strong>Bought Credits?</strong>
 	<p>
@@ -104,12 +100,5 @@
 			No
 		{/if}
 	</p>
-	<strong>Subscription Pending Cancellation?</strong>
-	<p>
-		{#if $userStore.subscriptionCancelAt}
-			Yes, on {$userStore.subscriptionCancelAt}
-		{:else}
-			No
-		{/if}
-	</p>
+
 {/if}

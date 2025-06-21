@@ -11,17 +11,17 @@ export const GET: RequestHandler = async ({ locals, url, cookies }: RequestEvent
     const state = query.get('state');
     const code = query.get('code');
 
-    const authMethods = await locals.pb?.collection('users').listAuthMethods();
-    if (!authMethods?.authProviders) {
-        console.log('authy providers');
-        redirect(303, '/login');
-    }
-    const provider = authMethods.authProviders.find(p => p.name == providerName);
+    // const authMethods = await locals.pb?.collection('users').listAuthMethods();
+    // if (!authMethods?.authProviders) {
+    //     console.log('authy providers');
+    //     redirect(303, '/login');
+    // }
+    // const provider = authMethods.authProviders.find(p => p.name == providerName);
 
-    if (!provider) {
-        console.log('Provider not found');
-        redirect(303, '/login');
-    }
+    // if (!provider) {
+    //     console.log('Provider not found');
+    //     redirect(303, '/login');
+    // }
 
     if (expectedState !== state) {
         console.log('state does not match expected', expectedState, state);

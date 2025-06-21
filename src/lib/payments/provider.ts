@@ -14,7 +14,8 @@ export type SubscriptionStatus =
   | "incomplete"
   | "past_due"
   | "unpaid"
-  | "trialing"; 
+  | "trialing"
+  | "inactive"; 
 
 export type Subscription = {
     id: string;

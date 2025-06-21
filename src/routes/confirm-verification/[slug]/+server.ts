@@ -5,9 +5,9 @@ export const GET: RequestHandler = async ({ locals, url }: RequestEvent) => {
     const urlParts = url.toString().split('/')
     const token = urlParts[urlParts.length - 1]
 
-    const verified = await locals.pb?.collection('users').confirmVerification(token)
+    const verified = await locals.authProvider.verifyUserEmail(token)
     if (verified) {
-        if (locals.pb?.authStore.isValid){
+        if (locals.authProvider.getCurrentUser()){
             redirect(303, '/');
         }
     }

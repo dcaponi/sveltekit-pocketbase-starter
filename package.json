@@ -33,7 +33,7 @@
 		"compression": "^1.7.5",
 		"jsonwebtoken": "^9.0.2",
 		"openai": "^4.80.0",
-		"pocketbase": "^0.15.2",
+		"pocketbase": "^0.25.0",
 		"stripe": "^14.11.0",
 		"twilio": "^5.7.1"
 	}

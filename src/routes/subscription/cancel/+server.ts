@@ -1,18 +1,16 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import Stripe from 'stripe';
 
-const stripe = new Stripe(import.meta.env['VITE_STRIPE_SECRET_KEY'], {
-  apiVersion: '2023-10-16',
-});
+export const GET: RequestHandler = async ({ locals }) => {
+  const user = await locals.authProvider.getCurrentUser();
+  if (!user)
+    return json({error: "no user"});
 
-export const PUT: RequestHandler = async ({ request }) => {
-  const { subscriptionID } = await request.json();
+  const success = await locals.paymentProvider.cancelSubscription(user.email);
+  if (!success)
+    return json({ success })
 
-  const resp = await stripe.subscriptions.update(
-    subscriptionID,
-    { cancel_at_period_end: true }
-  );
+  const subscription = await locals.paymentProvider.getSubscription(user.email);
   
-  return json({ subscriptionID: resp.id, subscriptionCancelAt: resp.cancel_at });
+  return json({ success, subscription });
 };
