@@ -2,6 +2,11 @@
 
 An insanely simple free plug & play setup for those wanting auth/user management in a SvelteKit app with as little pain as possible.
 
+## Provider Modules
+Pretty much anything you'd need can be rolled into a module under `src/lib/whatever`. Then the interface can be added to `app.d.ts` for type safety.
+
+Typically anything requiring api credentials and secrets just lives on the server side (sveltekit will yell at you about importing these modules on the frontend making the secret env vars exposed). Following that, most of these examples are providers that are added to the server's `event.locals` so they can be used on the server side only. If you would like to use a provider on the frontend, is possible to create an instance of one in a `+page.svelte` but be sure you're not exposing anything to the client you wouldn't want the public to know. 
+
 ## Getting Started - Local Development
 1. Set `VITE_POCKETBASE_URL=http://127.0.0.1:5555` in `sveltekit-pocketbase-starter/.env.local`
 2. Startup Option - Makefile
@@ -94,3 +99,6 @@ Assumes you have a SvelteKit project as created with `npm create svelte@latest <
 7. Fire it up and test. Stripe offers a few test payment card numbers that will let you test the flow. Check that:
    * when you hit the stripe page pocketbase shows the user having a new nonce. You can decode it on jwt.io to make sure its the right selection
    * when you come back from stripe, you have a nonce query string and that it matches what _was_ in pocketbase. pocketbase should show no nonce now.
+
+## Third Party Authorization
+Sometimes you want to have users authorize your app against 3rd parties - this code contains an example for authorizing Spotify to grab some details about a user in addition to authenticating them (or signing them up if need be). 
