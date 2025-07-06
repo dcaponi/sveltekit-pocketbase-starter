@@ -1,4 +1,2 @@
-import type { IDataStoreProvider } from './provider';
-
-export type { IDataStoreProvider };
-
+export * from "./provider";
+export * from "./pocketbase";

@@ -3,8 +3,7 @@
 	import { browser } from '$app/environment';
 
 	let { data } = $props();
-
-	let providers = $state(data);
+	const providers = data.providers
 
 	const gotoAuthProvider = (name: string) => {
 		if (browser) {
@@ -13,8 +12,10 @@
 				document.cookie = `cv=${providers[name].authCodeVerifier}`;
 				document.cookie = `prov=${name}`;
 			}
+			providers["spotify"].authProviderRedirect = new URL(providers["spotify"].authProviderRedirect)
+			providers["spotify"].authProviderRedirect.searchParams.set("scope", "streaming user-read-email playlist-read-private app-remote-control user-read-playback-state user-read-currently-playing user-read-playback-position")
 		}
-		window.location.href = providers[name].authProviderRedirect || '';
+		window.location.href = providers[name].authProviderRedirect.href || '';
 	};
 </script>
 
