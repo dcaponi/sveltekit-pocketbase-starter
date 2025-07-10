@@ -5,4 +5,3 @@ export * from './auth';
 export * from './datastore';
 export * from './music'
 export * from './speech-generation';
-export * from './ai-conversations';
