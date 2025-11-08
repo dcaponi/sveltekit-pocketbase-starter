@@ -179,14 +179,3 @@ export class PBAuthenticator implements AuthProvider, TokenHandler {
     // log out by clearing the auth store
     public logout = (): void => this.client.authStore.clear();
   }
-
-
-
-
-
-/*
-spotify access token = meta.accessToken
-
-curl -X GET "https://api.spotify.com/v1/playlists/3cEYpjA9oz9GiPac4AsH4n" \
--H "Authorization: Bearer BQBeE3XNb7JyfBmBLGGDjcAaCNNObz9hxQHrPmARHCG0ekK5ap-Q0AqlEoHRM9hpA7SaH0YxIX8G6iOykHiaIZmVM-F8MsM95cYIwIt9SrXSsRwBeYoQjJYGsC3PGHDdO4cRK0wGFdtJd7Zsi-8uz-06wbhZJ9vQn9JjpVLGVDNLiSAos1LJGGD6L5fdhcfW25yJsZayhbqY23M7SRl2lrdCT-mdZvVEToIe5A"
-*/
